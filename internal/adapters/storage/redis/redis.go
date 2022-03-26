@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/fuato1/shorturl/internal/domain/url"
-
 	"github.com/go-redis/redis/v8"
 )
 
@@ -40,21 +39,17 @@ func NewRepo() *Repo {
 	return repo
 }
 
-func (r *Repo) GetAll() ([]url.ShortUrl, error) {
-	var urls []url.ShortUrl
+func (r *Repo) GetAll() (map[string]string, error) {
+	urls := map[string]string{}
 	iter := r.redisClient.Scan(r.ctx, 0, "", 0).Iterator()
 
 	for iter.Next(r.ctx) {
-		result, err := r.redisClient.Get(r.ctx, iter.Val()).Result()
+		value, err := r.redisClient.Get(r.ctx, iter.Val()).Result()
 		if err != nil {
 			return urls, err
 		}
 
-		url := url.ShortUrl{
-			Source: result,
-			URL:    iter.Val(),
-		}
-		urls = append(urls, url)
+		urls[iter.Val()] = value
 	}
 
 	if err := iter.Err(); err != nil {
@@ -74,7 +69,7 @@ func (r *Repo) Add(url url.ShortUrl) error {
 	return nil
 }
 
-func (r *Repo) GetUrl(shortUrl string) (string, error) {
+func (r *Repo) Get(shortUrl string) (string, error) {
 	result, err := r.redisClient.Get(r.ctx, shortUrl).Result()
 
 	if err != nil {

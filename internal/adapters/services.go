@@ -6,13 +6,15 @@ import (
 )
 
 type Services struct {
-	URLRepository domain.URLRepository
-	QRRepository  domain.QRRepository
+	UrlSqlRepo   domain.UrlSqlRepository
+	UrlCacheRepo domain.UrlCacheRepository
+	QrSqlRepo    domain.QrRepository
 }
 
 func NewServices() *Services {
 	return &Services{
-		URLRepository: redis.NewRepo(),
-		// QrRepository: postgres.NewRepo(),
+		UrlSqlRepo:   nil,
+		UrlCacheRepo: redis.NewRepo(),
+		QrSqlRepo:    nil,
 	}
 }

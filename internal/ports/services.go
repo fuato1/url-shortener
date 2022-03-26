@@ -2,13 +2,18 @@ package ports
 
 import (
 	"github.com/fuato1/shorturl/internal/app"
-	"github.com/fuato1/shorturl/internal/ports/http"
+	"github.com/fuato1/shorturl/internal/ports/http/qr"
+	"github.com/fuato1/shorturl/internal/ports/http/url"
 )
 
 type Services struct {
-	Server *http.Server
+	UrlServer *url.UrlServer
+	QrServer  *qr.QrServer
 }
 
 func NewServices(appServices app.Services) Services {
-	return Services{Server: http.NewServer(appServices)}
+	return Services{
+		UrlServer: url.NewUrlServer(appServices.UrlServices),
+		QrServer:  qr.NewQrServer(appServices.QrServices),
+	}
 }

@@ -9,28 +9,28 @@ import (
 	"github.com/fuato1/shorturl/internal/pkg/uuid"
 )
 
-// URL queries and commands
-type URLQueries struct {
-	GetAllURLsHandler queries.GetAllURLsRequestHandler
+// Url queries and commands
+type UrlQueries struct {
+	GetAllUrlsHandler queries.GetAllUrlsRequestHandler
 }
 
-type URLCommands struct {
-	AddURLHandler commands.AddURLRequestHandler
+type UrlCommands struct {
+	AddUrlHandler commands.AddUrlRequestHandler
 }
 
-// URL services
-type URLServices struct {
-	Queries  URLQueries
-	Commands URLCommands
+// Url services
+type UrlServices struct {
+	Queries  UrlQueries
+	Commands UrlCommands
 }
 
-func NewURLServices(repo domain.URLRepository, uuidP uuid.Provider, timeP time.Provider, shortenerP shortener.Provider) URLServices {
-	return URLServices{
-		Queries: URLQueries{
-			GetAllURLsHandler: queries.NewGetAllURLsRequestHandler(repo),
+func NewUrlServices(repo domain.UrlCacheRepository, uuidP uuid.Provider, timeP time.Provider, shortenerP shortener.Provider) UrlServices {
+	return UrlServices{
+		Queries: UrlQueries{
+			GetAllUrlsHandler: queries.NewGetAllUrlsRequestHandler(repo),
 		},
-		Commands: URLCommands{
-			AddURLHandler: commands.NewAddURLRequestHandler(repo, uuidP, timeP, shortenerP),
+		Commands: UrlCommands{
+			AddUrlHandler: commands.NewAddUrlRequestHandler(repo, uuidP, timeP, shortenerP),
 		},
 	}
 }

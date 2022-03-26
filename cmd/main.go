@@ -27,11 +27,11 @@ func main() {
 		sha256.NewSHA256Provider(),
 		base58.NewBase58Provider(),
 	)
-	qrgenP := qrgen.NewQRGenProvider()
+	qrgenP := qrgen.NewQrGenProvider()
 
 	// creating url and qr services
-	urlServices := url.NewURLServices(adapterServices.URLRepository, uuidP, timeP, shortenerP)
-	qrServices := qr.NewQRServices(adapterServices.QRRepository, uuidP, timeP, qrgenP)
+	urlServices := url.NewUrlServices(adapterServices.UrlCacheRepo, uuidP, timeP, shortenerP)
+	qrServices := qr.NewQrServices(adapterServices.QrSqlRepo, uuidP, timeP, qrgenP)
 
 	// injecting url and qr services into app
 	appServices := app.NewServices(urlServices, qrServices)
@@ -40,5 +40,15 @@ func main() {
 	portServices := ports.NewServices(appServices)
 
 	// running services
-	portServices.Server.ListenAndServe(":" + os.Getenv("APP_PORT"))
+	done := make(chan bool)
+
+	go func() {
+		portServices.UrlServer.ListenAndServe(":" + os.Getenv("URL_SERVICE_PORT"))
+	}()
+
+	go func() {
+		portServices.QrServer.ListenAndServe(":" + os.Getenv("QR_SERVICE_PORT"))
+	}()
+
+	<-done
 }

@@ -7,13 +7,13 @@ import (
 
 // main service
 type Services struct {
-	URLServices url.URLServices
-	QRServices  qr.QRServices
+	UrlServices url.UrlServices
+	QrServices  qr.QrServices
 }
 
-func NewServices(URLServices url.URLServices, QRServices qr.QRServices) Services {
+func NewServices(UrlServices url.UrlServices, QrServices qr.QrServices) Services {
 	return Services{
-		URLServices: URLServices,
-		QRServices:  QRServices,
+		UrlServices: UrlServices,
+		QrServices:  QrServices,
 	}
 }

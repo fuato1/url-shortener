@@ -10,27 +10,27 @@ import (
 )
 
 // QR queries and commands
-type QRQueries struct {
-	GetAllQRsHandler queries.GetAllQRsRequestHandler
+type QrQueries struct {
+	GetAllQrsHandler queries.GetAllQrsRequestHandler
 }
 
-type QRCommands struct {
-	AddQRHandler commands.AddQRRequestHandler
+type QrCommands struct {
+	AddQrHandler commands.AddQrRequestHandler
 }
 
 // QR services
-type QRServices struct {
-	Queries  QRQueries
-	Commands QRCommands
+type QrServices struct {
+	Queries  QrQueries
+	Commands QrCommands
 }
 
-func NewQRServices(repo domain.QRRepository, uuidP uuid.Provider, timeP time.Provider, qrGenP qrgen.Provider) QRServices {
-	return QRServices{
-		Queries: QRQueries{
-			GetAllQRsHandler: queries.NewGetAllQRsRequestHandler(repo),
+func NewQrServices(repo domain.QrRepository, uuidP uuid.Provider, timeP time.Provider, qrGenP qrgen.Provider) QrServices {
+	return QrServices{
+		Queries: QrQueries{
+			GetAllQrsHandler: queries.NewGetAllQrsRequestHandler(repo),
 		},
-		Commands: QRCommands{
-			AddQRHandler: commands.NewAddQRRequestHandler(repo, uuidP, timeP, qrGenP),
+		Commands: QrCommands{
+			AddQrHandler: commands.NewAddQrRequestHandler(repo, uuidP, timeP, qrGenP),
 		},
 	}
 }

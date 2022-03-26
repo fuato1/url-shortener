@@ -1,5 +1,6 @@
 FROM golang:1.18.0-alpine AS dev
 WORKDIR /app
+RUN go install github.com/cespare/reflex@latest
 COPY . .
 
 FROM dev as build

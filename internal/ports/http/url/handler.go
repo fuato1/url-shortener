@@ -10,23 +10,25 @@ import (
 )
 
 type Handler struct {
-	urlServices url.URLServices
+	urlServices url.UrlServices
 }
 
-func NewHandler(urlServices url.URLServices) *Handler {
+func NewHandler(urlServices url.UrlServices) *Handler {
 	return &Handler{urlServices: urlServices}
 }
 
 func (h *Handler) GetAll(w http.ResponseWriter, _ *http.Request) {
-	urls, err := h.urlServices.Queries.GetAllURLsHandler.Handle()
+	result, err := h.urlServices.Queries.GetAllUrlsHandler.Handle()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
-		fmt.Fprintf(w, err.Error())
+		fmt.Fprintf(w, "%v", err.Error())
 		return
 	}
 
-	err = json.NewEncoder(w).Encode(urls)
+	err = json.NewEncoder(w).Encode(result.Urls)
 	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, "%v", err.Error())
 		return
 	}
 }
@@ -46,7 +48,7 @@ func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.urlServices.Commands.AddURLHandler.Handle(commands.AddURLRequest{
+	err = h.urlServices.Commands.AddUrlHandler.Handle(commands.AddUrlRequest{
 		Source: url.Source,
 		UserId: url.UserId,
 	})

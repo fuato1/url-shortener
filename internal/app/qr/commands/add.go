@@ -10,23 +10,23 @@ import (
 	"github.com/fuato1/shorturl/internal/pkg/uuid"
 )
 
-type AddQRRequest struct {
+type AddQrRequest struct {
 	Source string
 }
 
-type AddQRRequestHandler interface {
-	Handle(req AddQRRequest) error
+type AddQrRequestHandler interface {
+	Handle(req AddQrRequest) error
 }
 
-type addQRRequestHandler struct {
+type addQrRequestHandler struct {
 	uuidProvider  uuid.Provider
 	timeProvider  time.Provider
 	qrGenProvider qrgen.Provider
-	repo          domain.QRRepository
+	repo          domain.QrRepository
 }
 
-func NewAddQRRequestHandler(repo domain.QRRepository, uuidProvider uuid.Provider, timeProvider time.Provider, qrGenProvider qrgen.Provider) *addQRRequestHandler {
-	return &addQRRequestHandler{
+func NewAddQrRequestHandler(repo domain.QrRepository, uuidProvider uuid.Provider, timeProvider time.Provider, qrGenProvider qrgen.Provider) *addQrRequestHandler {
+	return &addQrRequestHandler{
 		repo:          repo,
 		uuidProvider:  uuidProvider,
 		timeProvider:  timeProvider,
@@ -34,7 +34,7 @@ func NewAddQRRequestHandler(repo domain.QRRepository, uuidProvider uuid.Provider
 	}
 }
 
-func (rh addQRRequestHandler) Handle(req AddQRRequest) error {
+func (rh addQrRequestHandler) Handle(req AddQrRequest) error {
 	qr := qr.QR{
 		Id:        rh.uuidProvider.NewUUID(),
 		Source:    req.Source,
@@ -44,7 +44,7 @@ func (rh addQRRequestHandler) Handle(req AddQRRequest) error {
 
 	err := rh.repo.Add(qr)
 	if err != nil {
-		log.Fatalf("unable to Add QR: %v", err)
+		log.Fatalf("unable to Add Qr: %v", err)
 		return err
 	}
 

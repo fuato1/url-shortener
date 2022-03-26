@@ -13,7 +13,7 @@ type Provider interface {
 
 type qrGenProvider struct{}
 
-func NewQRGenProvider() *qrGenProvider {
+func NewQrGenProvider() *qrGenProvider {
 	return &qrGenProvider{}
 }
 
@@ -28,6 +28,5 @@ func (qg qrGenProvider) Generate(data string) *barcode.Barcode {
 		log.Fatalf("unable to scale encoded data: %v", err)
 	}
 
-	// png.Encode(w, qr) -> this for the port
 	return &qrCode
 }

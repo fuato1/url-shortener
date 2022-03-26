@@ -45,7 +45,7 @@ func TestSetAndGet(t *testing.T) {
 	redisService.Add(url)
 
 	// get initial url
-	initialUrl, err := redisService.GetUrl(url.Source)
+	initialUrl, err := redisService.Get(url.Source)
 	if err != nil {
 		t.Fail()
 	}

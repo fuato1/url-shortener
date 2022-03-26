@@ -10,15 +10,15 @@ import (
 )
 
 type Handler struct {
-	qrServices qr.QRServices
+	qrServices qr.QrServices
 }
 
-func NewHandler(qrServices qr.QRServices) *Handler {
+func NewHandler(qrServices qr.QrServices) *Handler {
 	return &Handler{qrServices: qrServices}
 }
 
 func (h *Handler) GetAll(w http.ResponseWriter, _ *http.Request) {
-	qrs, err := h.qrServices.Queries.GetAllQRsHandler.Handle()
+	qrs, err := h.qrServices.Queries.GetAllQrsHandler.Handle()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		fmt.Fprint(w, err.Error())
@@ -44,7 +44,7 @@ func (h *Handler) Add(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.qrServices.Commands.AddQRHandler.Handle(commands.AddQRRequest{
+	err = h.qrServices.Commands.AddQrHandler.Handle(commands.AddQrRequest{
 		Source: qr.Source,
 	})
 	if err != nil {

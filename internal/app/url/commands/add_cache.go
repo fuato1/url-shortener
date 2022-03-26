@@ -10,24 +10,24 @@ import (
 	"github.com/fuato1/shorturl/internal/pkg/uuid"
 )
 
-type AddURLRequest struct {
+type AddUrlRequest struct {
 	Source string
 	UserId string
 }
 
-type AddURLRequestHandler interface {
-	Handle(req AddURLRequest) error
+type AddUrlRequestHandler interface {
+	Handle(req AddUrlRequest) error
 }
 
-type addURLRequestHandler struct {
-	repo       domain.URLRepository
+type addUrlRequestHandler struct {
+	repo       domain.UrlCacheRepository
 	uuidP      uuid.Provider
 	timeP      time.Provider
 	shortenerP shortener.Provider
 }
 
-func NewAddURLRequestHandler(repo domain.URLRepository, uuidP uuid.Provider, timeP time.Provider, shortenerP shortener.Provider) *addURLRequestHandler {
-	return &addURLRequestHandler{
+func NewAddUrlRequestHandler(repo domain.UrlCacheRepository, uuidP uuid.Provider, timeP time.Provider, shortenerP shortener.Provider) *addUrlRequestHandler {
+	return &addUrlRequestHandler{
 		repo:       repo,
 		uuidP:      uuidP,
 		timeP:      timeP,
@@ -35,7 +35,7 @@ func NewAddURLRequestHandler(repo domain.URLRepository, uuidP uuid.Provider, tim
 	}
 }
 
-func (rh addURLRequestHandler) Handle(req AddURLRequest) error {
+func (rh addUrlRequestHandler) Handle(req AddUrlRequest) error {
 	url := url.ShortUrl{
 		Id:        rh.uuidP.NewUUID(),
 		Source:    req.Source,

@@ -7,32 +7,32 @@ import (
 	"github.com/fuato1/shorturl/internal/domain/qr"
 )
 
-type GetAllQRsResult struct {
-	QR qr.QR
+type GetAllQrsResult struct {
+	Qr qr.QR
 }
 
-type GetAllQRsRequestHandler interface {
-	Handle() ([]GetAllQRsResult, error)
+type GetAllQrsRequestHandler interface {
+	Handle() ([]GetAllQrsResult, error)
 }
 
-type getAllQRsRequestHandler struct {
-	repo domain.QRRepository
+type getAllQrsRequestHandler struct {
+	repo domain.QrRepository
 }
 
-func NewGetAllQRsRequestHandler(repo domain.QRRepository) *getAllQRsRequestHandler {
-	return &getAllQRsRequestHandler{repo: repo}
+func NewGetAllQrsRequestHandler(repo domain.QrRepository) *getAllQrsRequestHandler {
+	return &getAllQrsRequestHandler{repo: repo}
 }
 
-func (rh getAllQRsRequestHandler) Handle() ([]GetAllQRsResult, error) {
-	QRs, err := rh.repo.GetAll()
+func (rh getAllQrsRequestHandler) Handle() ([]GetAllQrsResult, error) {
+	Qrs, err := rh.repo.GetAll()
 	if err != nil {
-		log.Fatalf("unable to GetAll QR codes: %v", err)
-		return []GetAllQRsResult{}, err
+		log.Fatalf("unable to GetAll Qr codes: %v", err)
+		return []GetAllQrsResult{}, err
 	}
 
-	var results []GetAllQRsResult
-	for _, qr := range QRs {
-		results = append(results, GetAllQRsResult{QR: qr})
+	var results []GetAllQrsResult
+	for _, qr := range Qrs {
+		results = append(results, GetAllQrsResult{Qr: qr})
 	}
 
 	return results, nil
