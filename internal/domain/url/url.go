@@ -6,7 +6,7 @@ import (
 	"github.com/google/uuid"
 )
 
-type URL struct {
+type ShortUrl struct {
 	Id        uuid.UUID
 	Source    string
 	URL       string

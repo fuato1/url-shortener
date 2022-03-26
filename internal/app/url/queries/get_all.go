@@ -8,7 +8,7 @@ import (
 )
 
 type GetAllURLsResult struct {
-	URL url.URL
+	URL url.ShortUrl
 }
 
 type GetAllURLsRequestHandler interface {

@@ -11,6 +11,6 @@ type QRRepository interface {
 }
 
 type URLRepository interface {
-	GetAll() ([]url.URL, error)
-	Add(url.URL) error
+	GetAll() ([]url.ShortUrl, error)
+	Add(url.ShortUrl) error
 }

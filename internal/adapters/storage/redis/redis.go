@@ -40,8 +40,8 @@ func NewRepo() *Repo {
 	return repo
 }
 
-func (r *Repo) GetAll() ([]url.URL, error) {
-	var urls []url.URL
+func (r *Repo) GetAll() ([]url.ShortUrl, error) {
+	var urls []url.ShortUrl
 	iter := r.redisClient.Scan(r.ctx, 0, "", 0).Iterator()
 
 	for iter.Next(r.ctx) {
@@ -50,7 +50,7 @@ func (r *Repo) GetAll() ([]url.URL, error) {
 			return urls, err
 		}
 
-		url := url.URL{
+		url := url.ShortUrl{
 			Source: result,
 			URL:    iter.Val(),
 		}
@@ -64,7 +64,7 @@ func (r *Repo) GetAll() ([]url.URL, error) {
 	return urls, nil
 }
 
-func (r *Repo) Add(url url.URL) error {
+func (r *Repo) Add(url url.ShortUrl) error {
 	err := r.redisClient.Set(r.ctx, url.URL, url.Source, CacheDuration).Err()
 
 	if err != nil {

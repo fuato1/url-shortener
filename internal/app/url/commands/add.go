@@ -36,7 +36,7 @@ func NewAddURLRequestHandler(repo domain.URLRepository, uuidP uuid.Provider, tim
 }
 
 func (rh addURLRequestHandler) Handle(req AddURLRequest) error {
-	url := url.URL{
+	url := url.ShortUrl{
 		Id:        rh.uuidP.NewUUID(),
 		Source:    req.Source,
 		URL:       rh.shortenerP.Shorten(req.Source, req.UserId),

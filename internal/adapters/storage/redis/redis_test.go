@@ -34,7 +34,7 @@ func TestSetAndGet(t *testing.T) {
 	sourceUrl := "https://www.guru3d.com/news-story/spotted-ryzen-threadripper-pro-3995wx-processor-with-8-channel-ddr4,2.html"
 	userId := "e0dba740-fc4b-4977-872c-d360239e6b1a"
 
-	url := url.URL{
+	url := url.ShortUrl{
 		Id:        uuidProvider.NewUUID(),
 		Source:    sourceUrl,
 		URL:       shortenerProvider.Shorten(sourceUrl, userId),
