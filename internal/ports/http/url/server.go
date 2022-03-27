@@ -34,6 +34,6 @@ func (s *UrlServer) registerRoutes() {
 }
 
 func (s *UrlServer) ListenAndServe(port string) {
-	fmt.Println("services running on port ", port)
+	fmt.Println("url service running on port ", port)
 	log.Fatal(http.ListenAndServe(port, nil))
 }

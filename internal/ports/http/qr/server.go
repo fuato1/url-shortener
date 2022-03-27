@@ -34,6 +34,6 @@ func (s *QrServer) registerRoutes() {
 }
 
 func (s *QrServer) ListenAndServe(port string) {
-	fmt.Println("services running on port ", port)
+	fmt.Println("qr service running on port ", port)
 	log.Fatal(http.ListenAndServe(port, nil))
 }
