@@ -5,16 +5,24 @@ import (
 	"github.com/fuato1/shorturl/internal/domain"
 )
 
-type Services struct {
+type UrlServices struct {
 	UrlSqlRepo   domain.UrlSqlRepository
 	UrlCacheRepo domain.UrlCacheRepository
-	QrSqlRepo    domain.QrRepository
 }
 
-func NewServices() *Services {
-	return &Services{
+type QrServices struct {
+	QrSqlRepo domain.QrRepository
+}
+
+func NewUrlServices() *UrlServices {
+	return &UrlServices{
 		UrlSqlRepo:   nil,
 		UrlCacheRepo: redis.NewRepo(),
-		QrSqlRepo:    nil,
+	}
+}
+
+func NewQrServices() *QrServices {
+	return &QrServices{
+		QrSqlRepo: nil,
 	}
 }

@@ -6,14 +6,22 @@ import (
 	"github.com/fuato1/shorturl/internal/ports/http/url"
 )
 
-type Services struct {
+type UrlServices struct {
 	UrlServer *url.UrlServer
-	QrServer  *qr.QrServer
 }
 
-func NewServices(appServices app.Services) Services {
-	return Services{
+type QrServices struct {
+	QrServer *qr.QrServer
+}
+
+func NewUrlServices(appServices app.UrlServices) UrlServices {
+	return UrlServices{
 		UrlServer: url.NewUrlServer(appServices.UrlServices),
-		QrServer:  qr.NewQrServer(appServices.QrServices),
+	}
+}
+
+func NewQrServices(appServices app.QrServices) QrServices {
+	return QrServices{
+		QrServer: qr.NewQrServer(appServices.QrServices),
 	}
 }
