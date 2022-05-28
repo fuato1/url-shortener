@@ -1,5 +1,13 @@
-FROM golang:1.18.0-alpine AS dev
+ARG GO_VERSION=1.18.0
+
+FROM golang:${GO_VERSION}-alpine AS dev
+
+RUN go env -w GOPROXY=direct
+RUN apk add --no-cache git
+RUN apk --no-cache add ca-certificates && update-ca-certificates
+
 WORKDIR /app
+
 RUN go install github.com/cespare/reflex@latest
 COPY . .
 
