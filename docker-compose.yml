@@ -1,6 +1,7 @@
-version: "3.9"
+version: '3'
 
 services:
+
   redis:
     image: redis:latest
     container_name: redis
@@ -11,53 +12,48 @@ services:
       - /redis:/redis
     command: redis-server
     restart: always
+
   url:
     container_name: url-service
+    hostname: url-service
     depends_on:
       - redis
     build:
-      dockerfile: Dockerfile
+      dockerfile: ./url-service/Dockerfile
       context: .
       target: dev
-    hostname: url-service
     environment:
       - REDIS_HOST=redis-service
       - REDIS_PORT=6379
       - URL_SERVICE_PORT=3000
+      - APP_PORT=3000
+      - GRPC_SERVER_HOST=qr-service
+      - GRPC_SERVER_PORT=50051
     ports:
       - 3000:3000
     volumes:
-      - .:/app
-    command: reflex -r "\.go$$" -s -- sh -c "go run ./url-service/main.go"
+      - ./url-service/:/url-service
+    command: reflex -r '(\.go$$)' --decoration=fancy -s go run main.go
     restart: always
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000"]
-      interval: 30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s
+
   qr:
     container_name: qr-service
+    hostname: qr-service
     depends_on:
       - redis
     build:
-      dockerfile: Dockerfile
+      dockerfile: ./qr-service/Dockerfile
       context: .
-      target: dev
-    hostname: qr-service
+      target: dev    
     environment:
       - REDIS_HOST=redis-service
       - REDIS_PORT=6379
       - QR_SERVICE_PORT=4000
+      - APP_PORT=4000
+      - GRPC_SERVER_PORT=50051
     ports:
       - 4000:4000
     volumes:
-      - .:/app
-    command: reflex -r "\.go$$" -s -- sh -c "go run ./qr-service/main.go"
+      - ./qr-service/:/qr-service
+    command: reflex -r '(\.go$$)' --decoration=fancy -s go run main.go
     restart: always
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:4000"]
-      interval: 30s
-      timeout: 30s
-      retries: 5
-      start_period: 30s

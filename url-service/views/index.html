@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shorturl</title>
+
+    <style>
+        #container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <h1>shorturl</h1>
+        <hr>
+
+        <h3>Shorten URL</h3>
+        <input type="text" name="source" id="source" placeholder="URL">
+        <br><br>
+
+        <label for="generate_qr">Generate QR?</label>
+        <input type="checkbox" name="generate_qr" id="generate_qr" checked>
+        <br><br>
+
+        <button id="shortenBtn">Go</button>
+        <br><br>
+
+        <a href="" id="short_url"></a>
+        <br><br>
+        <a href="" id="qr_url"></a>
+        <hr>
+    </div>
+
+    <script>
+        (() => {
+            document.getElementById("shortenBtn").addEventListener("click", () => {
+                const source = document.getElementById("source").value
+
+                if (source !== "") {
+                    fetch(
+                        "http://localhost:3000/url",
+                        {
+                            method: "POST",
+                            mode: 'cors',
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                "source": source
+                            })
+                        }
+                    )
+                    .then(response => response.json())
+                    .then(data => {
+                        const short_url = data.base_url + data.id
+                        const qr_url = data.base_url + "qr/" + data.id
+
+                        document.getElementById("short_url").textContent = short_url
+                        document.getElementById("short_url").href = short_url
+
+                        if (document.getElementById("generate_qr").checked) {
+                            document.getElementById("qr_url").textContent = qr_url
+                            document.getElementById("qr_url").href = qr_url
+                        } else {
+                            document.getElementById("qr_url").textContent = ""
+                            document.getElementById("qr_url").href = ""
+                        }
+                    })
+                }
+            })
+        })()
+    </script>
+</body>
+
+</html>
