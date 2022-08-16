@@ -27,4 +27,4 @@ or the production one...
 or build and run the image
 > `docker build -t shorturl:latest .`
 
-> `docker run -dp 3000:3000 --env APP_PORT= --env REDIS_HOST= --env REDIS_PORT=`
+> `docker run -dp <port>:<port> --env APP_PORT= --env REDIS_HOST= --env REDIS_PORT= shorturl`
