@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option go_package = "github.com/juanjoss/url-service/handlers/grpc/qrgen";
+option go_package = "github.com/juanjoss/shorturl/handlers/grpc/qrgen";
 
 package qrgen;
 

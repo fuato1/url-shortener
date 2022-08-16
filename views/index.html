@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
     <title>shorturl</title>
 
     <style>
@@ -34,9 +35,11 @@
         <button id="shortenBtn">Go</button>
         <br><br>
 
-        <a href="" id="short_url"></a>
+        <a href="" target="_blank" id="short_url"></a>
         <br><br>
-        <a href="" id="qr_url"></a>
+        <a href="" target="_blank" id="qr_url"></a>
+        <br><br>
+        <p id="error_msg"></p>
         <hr>
     </div>
 
@@ -46,6 +49,8 @@
                 const source = document.getElementById("source").value
 
                 if (source !== "") {
+                    document.getElementById("error_msg").textContent = ""
+
                     fetch(
                         "http://localhost:3000/url",
                         {
@@ -75,6 +80,11 @@
                             document.getElementById("qr_url").href = ""
                         }
                     })
+                    .catch(err => {
+                        document.getElementById("error_msg").textContent = "invalid URL"
+                    })
+                } else {
+                    document.getElementById("error_msg").textContent = "insert an URL"
                 }
             })
         })()

@@ -7,11 +7,12 @@ import (
 	"image"
 	"image/png"
 	"net/http"
+	neturl "net/url"
 
 	"github.com/gorilla/mux"
-	grpc "github.com/juanjoss/url-service/handlers/grpc/client"
-	"github.com/juanjoss/url-service/repository"
-	"github.com/juanjoss/url-service/url"
+	grpc "github.com/juanjoss/shorturl/handlers/grpc/client"
+	"github.com/juanjoss/shorturl/repository"
+	"github.com/juanjoss/shorturl/url"
 )
 
 func GetAll(w http.ResponseWriter, _ *http.Request) {
@@ -69,6 +70,13 @@ func ShortenURL(w http.ResponseWriter, r *http.Request) {
 
 	json.NewDecoder(r.Body).Decode(&request)
 	source := request["source"]
+
+	_, err := neturl.ParseRequestURI(source)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		fmt.Fprintf(w, err.Error())
+		return
+	}
 
 	id, err := url.Shorten(source)
 	if err != nil {

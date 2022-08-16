@@ -5,7 +5,7 @@ import (
 	"os"
 	"time"
 
-	pb "github.com/juanjoss/url-service/handlers/grpc/qrgen"
+	pb "github.com/juanjoss/shorturl/handlers/grpc/qrgen"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

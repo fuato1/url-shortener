@@ -1,7 +1,9 @@
 package http
 
 import (
+	"embed"
 	"fmt"
+	"io/fs"
 	"log"
 	"net/http"
 	"os"
@@ -12,12 +14,18 @@ import (
 
 var router *mux.Router
 
-func ListenAndServe(port string) {
+func ListenAndServe(port string, build embed.FS) {
 	// create router
 	router = mux.NewRouter()
 
+	// build FS
+	buildFS, err := fs.Sub(build, "views")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	// define routes
-	router.HandleFunc("/", http.FileServer(http.Dir("./views")).ServeHTTP).Methods(http.MethodGet)
+	router.HandleFunc("/", http.FileServer(http.FS(buildFS)).ServeHTTP).Methods(http.MethodGet)
 	router.HandleFunc("/url", GetAll).Methods(http.MethodGet)
 	router.HandleFunc("/url", ShortenURL).Methods(http.MethodPost)
 
