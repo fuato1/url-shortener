@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    hostname: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - /redis:/redis
+    command: redis-server
+    restart: always
+
+  app:
+    container_name: app
+    hostname: app
+    build:
+      dockerfile: Dockerfile
+      context: .
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - APP_PORT=3000
+      # - GRPC_SERVER_HOST=
+      # - GRPC_SERVER_PORT=
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/app
+    restart: always

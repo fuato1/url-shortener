@@ -2,35 +2,7 @@ version: '3'
 
 services:
 
-  redis:
-    image: redis:latest
-    container_name: redis
-    hostname: redis
-    ports:
-      - 6379:6379
-    volumes:
-      - /redis:/redis
-    command: redis-server
-    restart: always
-
-  app_dev:
-    container_name: app_dev
-    hostname: app_dev
-    depends_on:
-      - redis
+  app:
     build:
-      dockerfile: Dockerfile
-      context: .
       target: dev
-    environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - APP_PORT=3000
-      # - GRPC_SERVER_HOST=
-      # - GRPC_SERVER_PORT=
-    ports:
-      - 3000:3000
-    volumes:
-      - .:/app
     command: reflex -r '(\.go$$)' --decoration=fancy -s go run /app/main.go
-    restart: always

@@ -19,10 +19,10 @@ endpoints
 - GET /qr/{id} (get QR code, requires github.com/juanjoss/qrgen GRPC server)
 
 run in development environment with docker compose
-> `docker compose -f docker-compose.dev.yml up -d`
+> `docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d`
 
 or the production one...
-> `docker compose -f docker-compose.prod.yml up -d`
+> `docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d`
 
 or build and run the image
 > `docker build -t shorturl:latest .`
