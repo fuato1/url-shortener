@@ -23,5 +23,6 @@ RUN CGO_ENABLED=0 GOOS=linux go build \
     -a -installsuffix cgo -o urls .
 
 FROM gcr.io/distroless/static AS prod
-COPY --from=build /app/urls .
+USER nonroot:nonroot
+COPY --from=build --chown=nonroot:nonroot /app/urls .
 CMD ["./urls"]
