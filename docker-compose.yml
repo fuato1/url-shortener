@@ -7,7 +7,7 @@ services:
     container_name: redis
     hostname: redis
     ports:
-      - 6379:6379
+      - ${REDIS_PORT}:${REDIS_PORT}
     volumes:
       - /redis:/redis
     command: redis-server
@@ -16,19 +16,14 @@ services:
   app:
     container_name: app
     hostname: app
-    build:
-      dockerfile: Dockerfile
-      context: .
     depends_on:
       - redis
     environment:
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - APP_PORT=3000
-      # - GRPC_SERVER_HOST=
-      # - GRPC_SERVER_PORT=
+      - REDIS_HOST=${REDIS_HOST}
+      - REDIS_PORT=${REDIS_PORT}
+      - APP_PORT=${APP_PORT}
+      - GRPC_SERVER_HOST=${GRPC_SERVER_HOST}
+      - GRPC_SERVER_PORT=${GRPC_SERVER_PORT}
     ports:
-      - 3000:3000
-    volumes:
-      - .:/app
+      - ${APP_PORT}:${APP_PORT}
     restart: always

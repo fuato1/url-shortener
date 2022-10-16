@@ -1,8 +1,11 @@
 version: '3'
 
 services:
-
   app:
     build:
+      dockerfile: Dockerfile
+      context: .
       target: dev
+    volumes:
+      - .:/app
     command: reflex -r '(\.go$$)' --decoration=fancy -s go run /app/main.go
