@@ -21,13 +21,7 @@ Endpoints:
 Run the development environment with docker compose:
 
 ```bash
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up -d
-```
-
-or the production one...
-
-```bash
-docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
+docker compose up -d
 ```
 
 or pull and run the image
@@ -37,11 +31,11 @@ docker pull jujoss/shorturl:latest
 ```
 
 ```bash
-docker run -dp port:port \ 
-    --env APP_PORT=port \ 
-    --env REDIS_HOST=ip \ 
-    --env REDIS_PORT=port \ 
-    --env GRPC_SERVER_HOST=port \ 
-    --env GRPC_SERVER_PORT=port \ 
+docker run -dp 80:8080 \ 
+    --env APP_PORT=8080 \ 
+    --env REDIS_HOST=redis \ 
+    --env REDIS_PORT=6379 \ 
+    --env GRPC_SERVER_HOST=qrgen \ 
+    --env GRPC_SERVER_PORT=8081 \ 
     jujoss/shorturl:latest
 ```

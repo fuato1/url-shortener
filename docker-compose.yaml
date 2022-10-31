@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  redis:
+    image: redis:latest
+    container_name: redis
+    hostname: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: always
+
+  app:
+    container_name: app
+    hostname: app
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: dev
+    depends_on:
+      - redis
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - APP_PORT=8080
+      - GRPC_SERVER_HOST=qrgen
+      - GRPC_SERVER_PORT=8081
+    ports:
+      - 80:8080
+    volumes:
+      - .:/app
+    command: reflex -r '(\.go$$)' --decoration=fancy -s go run /app/main.go
+    restart: always

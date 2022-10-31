@@ -4,13 +4,14 @@ import (
 	"embed"
 	"os"
 
-	"github.com/juanjoss/shorturl/handlers/http"
+	"github.com/juanjoss/shorturl/pkg/api"
 )
 
 //go:embed views/*
 var fs embed.FS
 
 func main() {
-	// running service
-	http.ListenAndServe(os.Getenv("APP_PORT"), fs)
+	// creating and running service
+	server := api.NewServer(os.Getenv("APP_PORT"), fs)
+	server.ListenAndServe()
 }
