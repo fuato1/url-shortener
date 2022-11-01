@@ -11,9 +11,12 @@ import (
 )
 
 func (s *server) getQR(w http.ResponseWriter, r *http.Request) {
+	_, span := s.tracer.Start(r.Context(), "getQR")
+	defer span.End()
+
 	id := mux.Vars(r)["id"]
 
-	qr, err := grpc.GenerateQR("http://localhost:3000/" + id)
+	qr, err := grpc.GenerateQR("http://localhost/" + id)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return

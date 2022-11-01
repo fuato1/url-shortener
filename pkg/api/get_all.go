@@ -5,7 +5,7 @@ import (
 	"net/http"
 )
 
-func (s *server) getAll(w http.ResponseWriter, _ *http.Request) {
+func (s *server) getAll(w http.ResponseWriter, r *http.Request) {
 	urls, err := s.cache.All()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

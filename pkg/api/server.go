@@ -1,23 +1,31 @@
 package api
 
 import (
+	"context"
 	"embed"
 	"fmt"
 	"io/fs"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/juanjoss/shorturl/cache"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/trace"
 )
 
 type server struct {
-	router *mux.Router
-	port   string
-	fs     http.FileSystem
-	cache  cache.Cache
+	router  *mux.Router
+	port    string
+	fs      http.FileSystem
+	cache   cache.Cache
+	tracer  trace.Tracer
+	meter   metric.Meter
+	metrics *metrics
 }
 
 func NewServer(port string, embedFS embed.FS) *server {
@@ -36,6 +44,32 @@ func NewServer(port string, embedFS embed.FS) *server {
 }
 
 func (s *server) ListenAndServe() {
+	ctx, cancel := signal.NotifyContext(context.Background(), os.Interrupt)
+	defer cancel()
+
+	// init tracer
+	shutdownTracer, err := s.initTracer()
+	if err != nil {
+		log.Printf("unable to init tracer: %v", err)
+	}
+
+	defer func() {
+		if err := shutdownTracer(ctx); err != nil {
+			log.Printf("unable to shutdown trace provider: %v", err)
+		}
+	}()
+
+	// init metrics
+	shutdownMeter, err := s.initMeter()
+	if err != nil {
+		log.Fatalf("unable to init meter: %v", err)
+	}
+	defer func() {
+		if err := shutdownMeter(ctx); err != nil {
+			log.Fatalf("unable to shutdown metrics provider: %v", err)
+		}
+	}()
+
 	// register routes
 	s.router.HandleFunc("/", http.FileServer(s.fs).ServeHTTP).Methods(http.MethodGet)
 	s.router.HandleFunc("/url", s.getAll).Methods(http.MethodGet)
@@ -43,6 +77,8 @@ func (s *server) ListenAndServe() {
 
 	s.router.HandleFunc("/{id}", s.resolve).Methods(http.MethodGet)
 	s.router.HandleFunc("/qr/{id}", s.getQR).Methods(http.MethodGet)
+
+	s.router.Handle("/api/metrics", promhttp.Handler()).Methods(http.MethodGet)
 
 	// create logging and recovery middlewares
 	loggedRouter := handlers.LoggingHandler(os.Stdout, s.router)
