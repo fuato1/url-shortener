@@ -2,8 +2,10 @@ package api
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 	neturl "net/url"
+	"os"
 
 	"github.com/juanjoss/shorturl/pkg/shortener"
 )
@@ -11,6 +13,8 @@ import (
 func (s *server) shortenURL(w http.ResponseWriter, r *http.Request) {
 	_, span := s.tracer.Start(r.Context(), "shortenURL")
 	defer span.End()
+
+	s.metrics.shorturlRequestsCounter.Add(r.Context(), 1)
 
 	var request map[string]string
 
@@ -35,11 +39,9 @@ func (s *server) shortenURL(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	s.metrics.shorturlRequestsCounter.Add(r.Context(), 1)
-
 	w.WriteHeader(http.StatusOK)
 	json.NewEncoder(w).Encode(map[string]string{
-		"base_url": "http://localhost/",
+		"base_url": fmt.Sprintf("http://localhost:%s/", os.Getenv("APP_PORT")),
 		"id":       id,
 	})
 }

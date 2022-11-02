@@ -21,7 +21,7 @@ func New() Cache {
 	ctx := context.Background()
 
 	client := redis.NewClient(&redis.Options{
-		Addr: os.Getenv("REDIS_HOST") + ":" + os.Getenv("REDIS_PORT"),
+		Addr: "redis:" + os.Getenv("REDIS_PORT"),
 	})
 
 	_, err := client.Ping(ctx).Result()
@@ -30,15 +30,15 @@ func New() Cache {
 	}
 
 	cache := cache.New(&cache.Options{
-		Redis:      client,
-		LocalCache: cache.NewTinyLFU(1000, time.Minute),
+		Redis: client,
+		// LocalCache: cache.NewTinyLFU(1000, time.Minute),
 	})
 
 	return &redisCache{
 		client: client,
 		cache:  cache,
 		ctx:    ctx,
-		ttl:    1 * time.Hour,
+		ttl:    1 * time.Minute,
 	}
 }
 
@@ -63,11 +63,11 @@ func (rc *redisCache) All() (map[string]string, error) {
 }
 
 func (rc *redisCache) Add(key, value string) error {
-	err := rc.cache.Once(&cache.Item{
-		Key: key,
-		Do: func(i *cache.Item) (any, error) {
-			return value, nil
-		},
+	err := rc.cache.Set(&cache.Item{
+		Ctx:   rc.ctx,
+		Key:   key,
+		Value: value,
+		TTL:   rc.ttl,
 	})
 	if err != nil {
 		return err
@@ -79,10 +79,7 @@ func (rc *redisCache) Add(key, value string) error {
 func (rc *redisCache) Get(key string) (string, error) {
 	var record string
 
-	err := rc.cache.Once(&cache.Item{
-		Key:   key,
-		Value: record,
-	})
+	err := rc.cache.Get(rc.ctx, key, &record)
 	if err != nil {
 		return record, err
 	}

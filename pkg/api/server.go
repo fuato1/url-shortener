@@ -72,12 +72,11 @@ func (s *server) ListenAndServe() {
 
 	// register routes
 	s.router.HandleFunc("/", http.FileServer(s.fs).ServeHTTP).Methods(http.MethodGet)
-	s.router.HandleFunc("/url", s.getAll).Methods(http.MethodGet)
 	s.router.HandleFunc("/url", s.shortenURL).Methods(http.MethodPost)
-
 	s.router.HandleFunc("/{id}", s.resolve).Methods(http.MethodGet)
 	s.router.HandleFunc("/qr/{id}", s.getQR).Methods(http.MethodGet)
 
+	s.router.HandleFunc("/api/cache", s.getAll).Methods(http.MethodGet)
 	s.router.Handle("/api/metrics", promhttp.Handler()).Methods(http.MethodGet)
 
 	// create logging and recovery middlewares

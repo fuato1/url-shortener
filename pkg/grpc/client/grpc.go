@@ -2,6 +2,7 @@ package grpc
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"time"
 
@@ -10,12 +11,11 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-var (
-	addr = os.Getenv("GRPC_SERVER_HOST") + ":" + os.Getenv("GRPC_SERVER_PORT")
-)
-
 func GenerateQR(source string) ([]byte, error) {
-	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.Dial(
+		fmt.Sprintf("qrgen:%s", os.Getenv("QRGEN_GRPC_SERVER_PORT")),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	if err != nil {
 		return []byte{}, err
 	}
